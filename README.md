@@ -1,0 +1,15 @@
+# XDG desktop portal for gamescope-specific interfaces
+
+This XDG desktop portal backend implements the following [backend interfaces](https://flatpak.github.io/xdg-desktop-portal/docs/impl-dbus-interfaces.html):
+
+* [Access](https://flatpak.github.io/xdg-desktop-portal/docs/doc-org.freedesktop.impl.portal.Access.html)
+* [Screenshot](https://flatpak.github.io/xdg-desktop-portal/docs/doc-org.freedesktop.impl.portal.Screenshot.html)
+
+## How to build and install
+
+```shell
+$ meson setup _build .
+$ ninja -C _build
+$ cd _build
+$ meson install
+```
