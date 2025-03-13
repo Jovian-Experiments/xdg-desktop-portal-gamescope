@@ -1,0 +1,3 @@
+[portal]
+DBusName=@busname@
+Interfaces=org.freedesktop.impl.portal.Access;org.freedesktop.impl.portal.Screenshot;
