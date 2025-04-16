@@ -1,4 +1,10 @@
-portal_dir = datadir / 'xdg-desktop-portal' / 'portals'
+# Special place where only the data files for the holo and gamescope portals
+# will be installed (holo.portal, gamescope.portal and gamescope-portals.conf).
+# The /usr/bin/start-gamescope-session script makes the
+# $XDG_DESKTOP_PORTAL_DIR environment variable point to that place to ensure
+# that no other portals are found.
+portal_dir = datadir / 'xdg-desktop-portal' / 'gamescope'
+
 service_file = 'xdg-desktop-portal-gamescope.service'
 
 data_conf = configuration_data()
