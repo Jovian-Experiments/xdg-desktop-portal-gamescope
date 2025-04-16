@@ -1,12 +1,12 @@
 use ashpd::{
+    AppID, PortalError, WindowIdentifierType,
     backend::{
+        Result,
         request::RequestImpl,
         screenshot::{ColorOptions, ScreenshotImpl, ScreenshotOptions},
-        Result,
     },
-    desktop::{screenshot::Screenshot as ScreenshotResponse, Color, HandleToken},
+    desktop::{Color, HandleToken, screenshot::Screenshot as ScreenshotResponse},
     zbus::DBusError,
-    AppID, PortalError, WindowIdentifierType,
 };
 use async_trait::async_trait;
 
@@ -47,7 +47,7 @@ impl ScreenshotImpl for Screenshot {
             None => {
                 return log_error(PortalError::Failed(format!(
                     "No XDG pictures directory to save screenshot to"
-                )))
+                )));
             }
         };
         path.push(format!(
@@ -60,7 +60,7 @@ impl ScreenshotImpl for Screenshot {
                 return log_error(PortalError::Failed(format!(
                     "Invalid file path: {}",
                     path.display()
-                )))
+                )));
             }
         };
         if std::process::Command::new("gamescopectl")
