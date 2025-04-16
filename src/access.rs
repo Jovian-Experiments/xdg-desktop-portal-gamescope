@@ -1,11 +1,11 @@
 use ashpd::{
+    AppID, WindowIdentifierType,
     backend::{
+        Result,
         access::{AccessImpl, AccessOptions, AccessResponse},
         request::RequestImpl,
-        Result,
     },
     desktop::HandleToken,
-    AppID, WindowIdentifierType,
 };
 use async_trait::async_trait;
 
@@ -29,7 +29,7 @@ impl AccessImpl for Access {
         _body: String,
         options: AccessOptions,
     ) -> Result<AccessResponse> {
-        let mut response = <AccessResponse as std::default::Default>::default();
+        let mut response = AccessResponse::default();
         for choice in options.choices() {
             response = response.choice(choice.id(), choice.initial_selection());
         }
