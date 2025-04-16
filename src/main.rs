@@ -1,8 +1,10 @@
 use futures_util::future::pending;
 mod access;
+mod screencast;
 mod screenshot;
 
 use access::Access;
+use screencast::Screencast;
 use screenshot::Screenshot;
 
 include!(concat!(env!("CARGO_TARGET_DIR"), "/config.rs"));
@@ -29,6 +31,7 @@ async fn main() -> ashpd::Result<()> {
         // the frontend to conditionally discover the Screenshot interface
         // (see https://github.com/flatpak/xdg-desktop-portal/blob/2fb76ffb/src/xdg-desktop-portal.c#L321-L358).
         .access(Access)
+        .screencast(Screencast::default())
         .screenshot(Screenshot)
         .build()
         .await?;

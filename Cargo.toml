@@ -1,14 +1,16 @@
 [package]
 name = "xdg-desktop-portal-gamescope"
 version = "0.1.0"
-edition = "2021"
+edition = "2024"
 
 [dependencies]
-ashpd = { version = "0.11.0", features = ["backend"]}
+#ashpd = { version = "0.11.0", features = ["backend"]}
+ashpd = { git = "https://github.com/oSoMoN/ashpd.git", branch = "backend-screencast", features = ["backend"] }
 async-trait = "0.1.86"
 chrono = "0.4.39"
 futures-util = "0.3.31"
 log = "0.4.26"
+pipewire = "0.8.0"
 systemd-journal-logger = "0.5.0"
 tokio = { version = "1.43.0", features = ["fs", "macros", "net", "process", "rt-multi-thread", "sync"] }
 url = "2.3.1"
