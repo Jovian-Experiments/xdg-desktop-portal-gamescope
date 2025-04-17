@@ -13,14 +13,13 @@ use ashpd::{
             CreateSessionOptions, ScreencastImpl, SelectSourcesOptions, SelectSourcesResponse,
             StartCastOptions,
         },
-        session::CreateSessionResponse,
+        session::{CreateSessionResponse, SessionMonitor},
     },
     desktop::{
         HandleToken,
-        screencast::{CursorMode, SourceType, Stream, Streams as StartCastResponse},
+        screencast::{CursorMode, SourceType, StreamBuilder, Streams, StreamsBuilder},
     },
     enumflags2::BitFlags,
-    zbus::zvariant::OwnedObjectPath,
 };
 use async_trait::async_trait;
 use pipewire::{context::Context, main_loop::MainLoop};
@@ -100,12 +99,12 @@ impl ScreencastImpl for Screencast {
 
     async fn create_session(
         &self,
-        _handle: OwnedObjectPath,
-        session_handle: OwnedObjectPath,
+        _handle_token: HandleToken,
+        session_handle_token: HandleToken,
         _app_id: Option<AppID>,
         _options: CreateSessionOptions,
     ) -> Result<CreateSessionResponse> {
-        let session = session_handle.to_string();
+        let session = session_handle_token.to_string();
         let mut sessions = self.sessions.lock().unwrap();
         if sessions.contains(&session) {
             let errormsg = format!("A session with handle `{session}` already exists");
@@ -114,30 +113,16 @@ impl ScreencastImpl for Screencast {
         }
         sessions.push(session.clone());
         log::info!("ScreenCast session created: {session}");
-        Ok(CreateSessionResponse::new(session))
-    }
-
-    async fn session_closed(&self, session_handle: OwnedObjectPath) -> Result<()> {
-        let session = session_handle.to_string();
-        let mut sessions = self.sessions.lock().unwrap();
-        if let Some(index) = sessions.iter().position(|x| *x == session) {
-            sessions.swap_remove(index);
-            log::info!("ScreenCast session closed: {session}");
-            Ok(())
-        } else {
-            let errormsg = format!("Unknown session: `{session}`");
-            log::error!("{}", errormsg.as_str());
-            Err(PortalError::NotFound(errormsg))
-        }
+        Ok(CreateSessionResponse::new(session_handle_token))
     }
 
     async fn select_sources(
         &self,
-        session_handle: OwnedObjectPath,
+        session_handle_token: HandleToken,
         _app_id: Option<AppID>,
         _options: SelectSourcesOptions,
     ) -> Result<SelectSourcesResponse> {
-        let session = session_handle.to_string();
+        let session = session_handle_token.to_string();
         let sessions = self.sessions.lock().unwrap();
         if !sessions.contains(&session) {
             let errormsg = format!("Unknown session: `{session}`");
@@ -150,12 +135,12 @@ impl ScreencastImpl for Screencast {
 
     async fn start_cast(
         &self,
-        session_handle: OwnedObjectPath,
+        session_handle_token: HandleToken,
         _app_id: Option<AppID>,
         _window_identifier: Option<WindowIdentifierType>,
         _options: StartCastOptions,
-    ) -> Result<StartCastResponse> {
-        let session = session_handle.to_string();
+    ) -> Result<Streams> {
+        let session = session_handle_token.to_string();
         let sessions = self.sessions.lock().unwrap();
         if !sessions.contains(&session) {
             let errormsg = format!("Unknown session: `{session}`");
@@ -165,18 +150,33 @@ impl ScreencastImpl for Screencast {
         if let Ok(node_id) = find_pipewire_node("gamescope") {
             log::info!("ScreenCast starting with pipewire node {node_id}");
             let mut streams = vec![];
-            streams.push(Stream::new(
-                node_id,
-                None,
-                None,
-                Some(SourceType::Monitor),
-                None,
-            ));
-            Ok(StartCastResponse::new(streams, None))
+            streams.push(
+                StreamBuilder::new(node_id)
+                    .source_type(SourceType::Monitor)
+                    .build(),
+            );
+            Ok(StreamsBuilder::new(streams).build())
         } else {
             let errormsg = format!("gamescope stream not available");
             log::error!("{}", errormsg.as_str());
             Err(PortalError::Failed(errormsg))
+        }
+    }
+}
+
+#[async_trait]
+impl SessionMonitor for Screencast {
+    async fn session_closed(&self, session_handle_token: HandleToken) -> Result<()> {
+        let session = session_handle_token.to_string();
+        let mut sessions = self.sessions.lock().unwrap();
+        if let Some(index) = sessions.iter().position(|x| *x == session) {
+            sessions.swap_remove(index);
+            log::info!("ScreenCast session closed: {session}");
+            Ok(())
+        } else {
+            let errormsg = format!("Unknown session: `{session}`");
+            log::error!("{}", errormsg.as_str());
+            Err(PortalError::NotFound(errormsg))
         }
     }
 }
