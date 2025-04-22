@@ -60,7 +60,7 @@ checksum = "e16d2d3311acee920a9eb8d33b8cbc1787ce4a264e85f964c2404b969bdcd487"
 [[package]]
 name = "ashpd"
 version = "0.11.0"
-source = "git+https://github.com/oSoMoN/ashpd.git?branch=backend-screencast#b7059c360598429070cdbada4c3a7d121784afa7"
+source = "git+https://github.com/bilelmoussaoui/ashpd.git#51cc0b1109c1160f609563eb303979059738aaef"
 dependencies = [
  "async-trait",
  "enumflags2",
