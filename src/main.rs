@@ -1,5 +1,6 @@
 use futures_util::future::pending;
 mod access;
+mod gamescope_pipewire;
 mod screencast;
 mod screenshot;
 
