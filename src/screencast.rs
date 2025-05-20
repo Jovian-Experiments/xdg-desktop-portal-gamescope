@@ -104,11 +104,15 @@ impl ScreencastImpl for Screencast {
 
     async fn select_sources(
         &self,
-        _session_token: HandleToken,
+        session_token: HandleToken,
         _app_id: Option<AppID>,
-        _options: SelectSourcesOptions,
+        options: SelectSourcesOptions,
     ) -> Result<SelectSourcesResponse> {
         // TODO: actually select the sources
+        log::info!(
+            "ScreenCast sources selection for session {session_token}: {:?}",
+            options
+        );
         Ok(SelectSourcesResponse {})
     }
 
@@ -140,7 +144,8 @@ impl ScreencastImpl for Screencast {
 
 #[async_trait]
 impl SessionImpl for Screencast {
-    async fn session_closed(&self, _session_token: HandleToken) -> Result<()> {
+    async fn session_closed(&self, session_token: HandleToken) -> Result<()> {
+        log::info!("ScreenCast session {session_token} closed");
         Ok(())
     }
 }
