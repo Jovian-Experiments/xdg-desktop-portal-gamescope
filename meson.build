@@ -2,7 +2,7 @@ project(
   'xdg-desktop-portal-gamescope', 'rust',
   version: '0.1',
   license: 'LGPL-2.1-or-later',
-  meson_version: '>=1.1',
+  meson_version: '>=1.3',
 )
 
 cargo = find_program('cargo', required: true)

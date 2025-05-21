@@ -12,11 +12,17 @@ data_conf.set('busname', busname)
 data_conf.set('portalbin', bindir / binary)
 data_conf.set('servicefile', service_file)
 
+fs = import('fs')
+
 systemd = dependency('systemd')
+systemd_default_prefix = systemd.get_variable(pkgconfig: 'prefix')
 systemd_user_unit_dir = systemd.get_variable(pkgconfig: 'systemd_user_unit_dir')
+systemd_user_unit_dir = prefix / fs.relative_to(systemd_user_unit_dir, systemd_default_prefix)
 
 dbus = dependency('dbus-1')
+dbus_default_prefix = dbus.get_variable(pkgconfig: 'prefix')
 session_bus_services_dir = dbus.get_variable(pkgconfig: 'session_bus_services_dir')
+session_bus_services_dir = prefix / fs.relative_to(session_bus_services_dir, dbus_default_prefix)
 
 configure_file(
   input: 'gamescope.portal.in',
