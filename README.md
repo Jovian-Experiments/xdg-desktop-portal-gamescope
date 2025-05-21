@@ -9,10 +9,10 @@ This XDG desktop portal backend implements the following [backend interfaces](ht
 ## How to build and install
 
 ```shell
-$ meson setup _build .
+$ meson setup --prefix /usr _build .
 $ ninja -C _build
 $ cd _build
-$ meson install
+$ meson install --no-rebuild
 ```
 
 ## Authors
