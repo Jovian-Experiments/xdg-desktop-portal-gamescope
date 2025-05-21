@@ -1,3 +1,7 @@
+# Copyright © 2025 Valve Corporation
+#
+# SPDX-License-Identifier: BSD-3-Clause
+
 src_conf = configuration_data()
 src_conf.set('busname', busname)
 configure_file(

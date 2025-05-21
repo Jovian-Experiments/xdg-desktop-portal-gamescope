@@ -1,7 +1,11 @@
+# Copyright © 2025 Valve Corporation
+#
+# SPDX-License-Identifier: BSD-3-Clause
+
 project(
   'xdg-desktop-portal-gamescope', 'rust',
   version: '0.1',
-  license: 'LGPL-2.1-or-later',
+  license: 'BSD-3-Clause',
   meson_version: '>=1.3',
 )
 

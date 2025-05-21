@@ -14,3 +14,11 @@ $ ninja -C _build
 $ cd _build
 $ meson install
 ```
+
+## Authors
+
+Olivier Tilloy <otilloy@igalia.com>
+
+## License
+
+xdg-desktop-portal-gamescope is published under the [3-Clause BSD license](LICENSE).

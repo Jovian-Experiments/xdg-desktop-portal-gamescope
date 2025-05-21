@@ -1,3 +1,9 @@
+/*
+ * Copyright © 2025 Valve Corporation
+ *
+ * SPDX-License-Identifier: BSD-3-Clause
+ */
+
 use futures_util::future::pending;
 mod access;
 mod gamescope_pipewire;

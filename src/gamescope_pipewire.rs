@@ -1,3 +1,9 @@
+/*
+ * Copyright © 2025 Valve Corporation
+ *
+ * SPDX-License-Identifier: BSD-3-Clause
+ */
+
 use std::{env, os::unix::net::UnixStream, path::PathBuf};
 use wayland_client::{ConnectError, Connection, Dispatch, QueueHandle, protocol::wl_registry};
 
