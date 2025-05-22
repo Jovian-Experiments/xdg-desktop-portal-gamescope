@@ -1,7 +1,7 @@
 [Desktop Entry]
 Type=Application
 Name=Portal
-# TRANSLATORS: Don't translate this text (this is icon name)
+# TRANSLATORS: Don't translate this text (this is an icon name)
 Icon=applications-system-symbolic
 Exec=@portalbin@
 NoDisplay=true
