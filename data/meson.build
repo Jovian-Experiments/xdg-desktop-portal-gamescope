@@ -9,7 +9,7 @@ service_file = 'xdg-desktop-portal-gamescope.service'
 
 data_conf = configuration_data()
 data_conf.set('busname', busname)
-data_conf.set('portalbin', bindir / binary)
+data_conf.set('portalbin', libexecdir / binary)
 data_conf.set('servicefile', service_file)
 
 fs = import('fs')

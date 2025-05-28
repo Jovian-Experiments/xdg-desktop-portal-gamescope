@@ -29,16 +29,16 @@ custom_target(
   'cargo-build',
   build_by_default: true,
   build_always_stale: true,
-  output: meson.project_name(),
+  output: binary,
   console: true,
   install: true,
-  install_dir: bindir,
+  install_dir: libexecdir,
   command: [
     'env',
     cargo_env,
     cargo, 'build',
     cargo_options,
     '&&',
-    'cp', 'src' / rust_target / meson.project_name(), '@OUTPUT@',
+    'cp', 'src' / rust_target / binary, '@OUTPUT@',
   ]
 )

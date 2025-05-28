@@ -16,12 +16,11 @@ rustc_version = run_command('rustc', '--version', check: true).stdout().strip()
 message(rustc_version)
 
 prefix = get_option('prefix')
-bindir = prefix / get_option('bindir')
 datadir = prefix / get_option('datadir')
-libdir = prefix / get_option('libdir')
+libexecdir = prefix / get_option('libexecdir')
 
 busname = 'org.freedesktop.impl.portal.desktop.gamescope'
-binary = 'xdg-desktop-portal-gamescope'
+binary = meson.project_name()
 
 subdir('data')
 subdir('src')
