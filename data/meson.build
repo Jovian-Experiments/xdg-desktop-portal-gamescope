@@ -3,7 +3,7 @@
 # The /usr/bin/start-gamescope-session script makes the
 # $XDG_DESKTOP_PORTAL_DIR environment variable point to that place to ensure
 # that no other portals are found.
-portal_dir = datadir / 'xdg-desktop-portal' / 'gamescope'
+portal_dir = datadir / 'xdg-desktop-portal' / 'gamescope-portals'
 
 service_file = 'xdg-desktop-portal-gamescope.service'
 
