@@ -15,6 +15,8 @@ use ashpd::{
     zbus::DBusError,
 };
 use async_trait::async_trait;
+use futures_util::StreamExt;
+use inotify::{EventMask, Inotify, WatchMask};
 
 #[derive(Default)]
 pub struct Screenshot;
@@ -69,13 +71,59 @@ impl ScreenshotImpl for Screenshot {
                 )));
             }
         };
+        // gamescope processes the screenshot command asynchronously, so
+        // we need to wait for the file to be written to disk
+        let inotify = match Inotify::init() {
+            Ok(inotify) => {
+                if inotify
+                    .watches()
+                    .add(&path.parent().unwrap(), WatchMask::CLOSE_WRITE)
+                    .is_ok()
+                {
+                    Some(inotify)
+                } else {
+                    log::warn!("Failed to add inotify file watch");
+                    None
+                }
+            }
+            _ => {
+                log::warn!("Failed to initialize inotify");
+                None
+            }
+        };
+
         if std::process::Command::new("gamescopectl")
             .arg("screenshot")
             .arg(path.as_path())
             .status()
             .is_ok_and(|s| s.success())
         {
-            log::info!("Screenshot saved to {}", path.display());
+            match inotify {
+                Some(inotify) => {
+                    let mut buffer = [0; 1024];
+                    match inotify.into_event_stream(&mut buffer) {
+                        Ok(mut stream) => {
+                            while let Some(event_or_error) = stream.next().await {
+                                match event_or_error {
+                                    Ok(event) => {
+                                        if event.mask == EventMask::CLOSE_WRITE
+                                            && event.name
+                                                == Some(path.file_name().unwrap().to_os_string())
+                                        {
+                                            log::info!("Screenshot saved to {}", path.display());
+                                            return Ok(ScreenshotResponse::new(url));
+                                        }
+                                    }
+                                    _ => (),
+                                }
+                            }
+                        }
+                        _ => log::warn!("Failed to stream inotify events"),
+                    }
+                }
+                None => (),
+            }
+            log::info!("Screenshot requested, pending saving at {}", path.display());
             return Ok(ScreenshotResponse::new(url));
         }
         log_error(PortalError::Failed(format!("Failed to take screenshot")))
