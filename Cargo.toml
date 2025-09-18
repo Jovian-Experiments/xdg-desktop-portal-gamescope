@@ -5,8 +5,7 @@ version = "0.1.0"
 edition = "2024"
 
 [dependencies]
-#ashpd = { version = "0.11.0", features = ["backend"]}
-ashpd = { git = "https://github.com/bilelmoussaoui/ashpd", rev = "51cc0b1109c1160f609563eb303979059738aaef", features = ["backend"] }
+ashpd = { version = "0.12.0", features = ["backend"]}
 async-trait = "0.1.86"
 chrono = "0.4.39"
 futures-util = "0.3.31"
